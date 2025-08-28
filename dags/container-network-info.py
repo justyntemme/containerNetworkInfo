@@ -17,7 +17,7 @@ API_POOL_NAME = "api_processing_pool"
 # --- Configuration from Environment Variable ---
 # Use os.getenv to read the S3 bucket name from an environment variable.
 # Provide a fallback default if the variable is not set.
-S3_BUCKET_NAME = os.getenv("DATA_PIPELINE_S3_BUCKET", "your-default-bucket-name")
+S3_BUCKET_NAME = os.getenv("DATA_PIPELINE_S3_BUCKET", "container-network-etl")
 
 # --- Task Definitions ---
 @task(task_id="fetch_and_upload_to_s3")
