@@ -17,7 +17,7 @@ API_POOL_NAME = "api_processing_pool"
 # --- Task Definitions ---
 
 @task(task_id="get_all_containers")
-def get_all_containers_task() -> List]:
+def get_all_containers_task() -> List[Dict[str, Any]]:
     """
     Fetches all container data from the paginated API, handling rate limiting
     for the sequential fetch process. This task's sole responsibility is to
@@ -48,7 +48,7 @@ def get_all_containers_task() -> List]:
     # Setup for paginated fetch
     containers_url = f"{tl_url}/api/v1/containers"
     headers = {"Authorization": f"Bearer {token}"}
-    all_containers =
+    all_containers = [] # FIX: Initialize as an empty list
     offset = 0
     limit = 100
     rate_limit = 30
@@ -105,9 +105,9 @@ def extract_network_info_task(container: Dict[str, Any]) -> Dict[str, Any]:
     """
     # This is the same processing logic from the original script.
     container_id = container.get("_id")
-    open_ports =
+    open_ports = [] # FIX: Initialize as an empty list
     network = container.get("network", {})
-    for port in network.get("ports",):
+    for port in network.get("ports", []):
         open_ports.append({"port": port.get("container"), "type": "network"})
     
     if open_ports:
@@ -116,7 +116,7 @@ def extract_network_info_task(container: Dict[str, Any]) -> Dict[str, Any]:
 
 
 @task(task_id="load_network_info")
-def load_network_info_task(all_container_info: List]):
+def load_network_info_task(all_container_info: List[Dict[str, Any]]):
     """Mocks loading data by logging the processed container info."""
     count = sum(1 for info in all_container_info if info)
     logging.info(f"--- Aggregated Results ---")
