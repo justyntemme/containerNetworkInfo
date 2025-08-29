@@ -63,7 +63,7 @@ def fetch_and_upload_to_s3() -> Dict[str, Any]:
         return {"s3_uri": "", "indices": []}
 
     # --- Part 2: Manually upload the data to S3 ---
-    s3_hook = S3Hook(aws_conn_id="aws_default")
+    s3_hook = S3Hook()
     data_string = json.dumps(all_containers)
     s3_key = f"container_data/run_{{{{ ts_nodash }}}}.json"
     
@@ -85,7 +85,7 @@ def process_container_from_s3(s3_uri: str, container_index: int) -> Dict[str, An
     if not s3_uri:
         return {}
 
-    s3_hook = S3Hook(aws_conn_id="aws_default")
+    s3_hook = S3Hook()
     bucket, key = s3_hook.parse_s3_url(s3_uri)
     
     # Each mapped task downloads the full file
@@ -118,7 +118,7 @@ def cleanup_s3_file_task(s3_uri: str):
         logging.info("No S3 URI provided, skipping cleanup.")
         return
     
-    s3_hook = S3Hook(aws_conn_id="aws_default")
+    s3_hook = S3Hook()
     logging.info(f"Cleaning up S3 object: {s3_uri}")
     bucket, key = s3_hook.parse_s3_url(s3_uri)
     s3_hook.delete_objects(bucket=bucket, keys=key)
