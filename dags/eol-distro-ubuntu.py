@@ -141,7 +141,7 @@ def load_data_to_mysql(filtered_data: List[Dict[str, Any]], mysql_conn_id: str =
         PRIMARY KEY (repo, tag, cve)
     );
     """
-    hook.run(create_table_sql)
+    hook.run(create_table_sql, autocommit=True)
     logging.info(f"Ensured table '{target_table}' exists.")
 
     # Prepare rows for insertion using .get() for safety against missing keys
@@ -171,7 +171,8 @@ def load_data_to_mysql(filtered_data: List[Dict[str, Any]], mysql_conn_id: str =
             table=target_table,
             rows=rows_to_insert,
             target_fields=target_fields,
-            replace=True
+            replace=True,
+            autocommit=True
         )
         logging.info(f"Successfully replaced {len(rows_to_insert)} rows in '{target_table}'.")
     else:
